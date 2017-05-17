@@ -8,16 +8,9 @@
 
 import UIKit
 
+
 class MovieTableViewController: UITableViewController {
     var queue = OperationQueue();
-    class Downloader {
-        
-        class func downloadImageWithURL(_ url:String) -> UIImage! {
-            print("url \(url)")
-            let data = try? Data(contentsOf: URL(string: url)!)
-            return UIImage(data: data!)
-        }
-    }
 
     // 1
     let defaultSession = URLSession(configuration: URLSessionConfiguration.default)
@@ -124,27 +117,12 @@ class MovieTableViewController: UITableViewController {
         
         // Configure the cell...
         let moviecell = results[indexPath.row]
-        cell.title.text = moviecell.title;
-        cell.overview.text = moviecell.overview;
-        /*
-        queue = OperationQueue()
-        let operation1 = BlockOperation(block: {
-            let img1 = Downloader.downloadImageWithURL("http://image.tmdb.org/t/p/w185\(moviecell.poster)")
-            OperationQueue.main.addOperation({
-                cell.imagePoster.image = img1
-            })
-        })
-        operation1.completionBlock = {
-            operation1.completionBlock = {
-                print("Operation 1 completed, cancelled:\(operation1.isCancelled) ")
-            }
-        }
-        queue.addOperation(operation1)*/
+        //cell.title.text = moviecell.title;
+        //cell.overview.text = moviecell.overview;
+
         let queue = DispatchQueue.global(qos: .default)
         queue.async() { () -> Void in
-            
-            print("ertet")
-            let img1 = Downloader.downloadImageWithURL("http://image.tmdb.org/t/p/w185\(moviecell.poster)")
+            let img1 = Downloader.downloadImageWithURL("http://image.tmdb.org/t/p/w185"+moviecell.poster!)
             DispatchQueue.main.async(execute: {
                 cell.imagePoster.image = img1
             })
@@ -189,14 +167,22 @@ class MovieTableViewController: UITableViewController {
     }
     */
 
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if (segue.identifier == "show") {
+            
+            let DetailVC = segue.destination as! MovieViewController
+            if let indexPath = self.tableView.indexPathForSelectedRow{
+                let movieVC: movie
+                movieVC = results[indexPath.row]
+                DetailVC.modalMovie = movieVC
+                
+            }
+        }
     }
-    */
+    
 
 }

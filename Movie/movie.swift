@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 class movie {
     var title: String?
     var poster: String?
